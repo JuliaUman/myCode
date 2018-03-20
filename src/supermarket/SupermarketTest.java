@@ -1,7 +1,10 @@
 package supermarket;
+
 import org.junit.jupiter.api.Test;
+import static org.junit.Assert.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 public class SupermarketTest {
 
     public static final int BAR_CODE_TOMATO = 524814;
