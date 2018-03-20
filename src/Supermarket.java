@@ -1,39 +1,52 @@
-
+package supermarket;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Supermarket {
- List <Product> products = new ArrayList();
- List <Product> sales = new ArrayList();
 
- public void addProduct(String productName, double price, long barCode) {
-     products.add(new Product(productName, price, barCode));
- }
- //public double scanProduct(long barCode) {
-    // for(long i = 0; i < products.size(); i++) {
-       //  Product product = new Product();
-       //  if(barCode == product.barCode){
-//
-  //       }return product.price;
-     //}
-    // return 0;
- //}
-  public void addspecialPrice(String productName, double specialPrice, int amount) {
-     sales.add(new Product(productName, specialPrice, amount));
+    Map<Long, Product> products = new HashMap<>();
+    List<Integer> checkout = new ArrayList<>();
+
+    public void addProduct(String productName, int price, long barCode, int specialPrice, int specialAmount) {
+        products.put(barCode, new Product(productName,price, specialPrice, specialAmount));
+    }
+
+    public double scanProduct(long barCode) {
+        Product product = products.get(barCode);{
+            if(!products.containsKey(barCode)) {
+                throw new IllegalStateException("Product hasn't been registered into the system");
+            }
+            return product.price;
         }
-
-    public double specialSales(String productName, int amount) {
-        for(int i = 0; i < sales.size(); i++) {
-            Product product = new Product();
-            if(productName.equals(product.productName)){
-                if(amount == product.amount) {
-
-            }return product.specialPrice;
+    }
+    public void addToCheckout(long barCode) {
+        Product product = products.get(barCode);
+        if (products.containsKey(barCode)) {
+            checkout.add(product.price);
         }
+    }
 
-}
-        return 0;
+    public double getCheckout() {
+        double sum = 0;
+        for (int i = 0; i < checkout.size(); i++) {
+            int productPrice = checkout.get(i);
+            if (productPrice > 0) {
+                sum = sum + productPrice;
+            }
+        }
+        return sum;
+    }
+
+    public double specialCheckout(long barCode, int amount) {
+        Product product = products.get(barCode);
+        if (products.containsKey(barCode)) {
+            int wholeDivision = amount / product.specialAmount;
+            int remainder = amount % product.specialAmount;
+            return product.specialPrice * wholeDivision + remainder * product.price;
+        }
+        throw new IllegalStateException("Product hasn't been registered in the system!");
     }
 }
-
